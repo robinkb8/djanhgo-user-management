@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial Black', Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px) scale(0.5);
+            transition: all 0.8s ease-out;
+            text-shadow: 
+                4px 4px 0px #000,
+                8px 8px 15px rgba(0,0,0,0.5);
+        }
+        
+        .letter.show {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+        }
+        
+        .word-user {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .word-management {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .word-system {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .view-button {
+            opacity: 0;
+            transform: scale(0);
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53, #FFD700);
+            background-size: 300% 300%;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.3),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            border: 3px solid #000;
+            transition: all 0.5s ease;
+            animation: gradientShift 3s infinite;
+        }
+        
+        .view-button.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .view-button:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 
+                0 15px 25px rgba(0,0,0,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+        
+        .view-button:active {
+            transform: scale(0.95) translateY(-2px);
+        }
+        
+        /* Responsive font sizes */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+                line-height: 1.1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.8rem;
+                line-height: 1.1;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <!-- Main Content -->
+    <div class="text-center px-4">
+        <!-- Main Title -->
+        <h1 class="main-title text-6xl md:text-8xl font-black mb-12 leading-tight">
+            <!-- All letters in sequence -->
+            <div class="mb-4">
+                <span class="letter word-user" data-index="0">U</span>
+                <span class="letter word-user" data-index="1">S</span>
+                <span class="letter word-user" data-index="2">E</span>
+                <span class="letter word-user" data-index="3">R</span>
+            </div>
+            
+            <div class="mb-4">
+                <span class="letter word-management" data-index="4">M</span>
+                <span class="letter word-management" data-index="5">A</span>
+                <span class="letter word-management" data-index="6">N</span>
+                <span class="letter word-management" data-index="7">A</span>
+                <span class="letter word-management" data-index="8">G</span>
+                <span class="letter word-management" data-index="9">E</span>
+                <span class="letter word-management" data-index="10">M</span>
+                <span class="letter word-management" data-index="11">E</span>
+                <span class="letter word-management" data-index="12">N</span>
+                <span class="letter word-management" data-index="13">T</span>
+            </div>
+            
+            <div>
+                <span class="letter word-system" data-index="14">S</span>
+                <span class="letter word-system" data-index="15">Y</span>
+                <span class="letter word-system" data-index="16">S</span>
+                <span class="letter word-system" data-index="17">T</span>
+                <span class="letter word-system" data-index="18">E</span>
+                <span class="letter word-system" data-index="19">M</span>
+            </div>
+        </h1>
+        
+        <!-- VIEW Button - Always visible for testing -->
+        <button 
+            id="viewButton"
+            class="view-button text-3xl font-black text-white py-6 px-16 rounded-2xl uppercase tracking-wider show"
+            onclick="goToRegister()"
+        >
+            VIEW
+        </button>
+        
+
+        
+        <!-- Optional: User info if logged in -->
+          {% if user.is_authenticated %}
+        <div class="absolute top-8 right-8 text-white text-right opacity-80">
+            <p class="text-lg font-semibold">Welcome back!</p>
+            <p class="text-sm">{{ user.first_name }} {{ user.last_name }}</p>
+            <a href="{% url 'logout' %}" class="text-xs underline hover:text-yellow-300 transition-colors">Logout</a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        let totalLetters = 20;
+        
+        // Function to show letters one by one
+        function animateLetters() {
+            const letters = document.querySelectorAll('.letter');
+            const button = document.getElementById('viewButton');
+            
+            // Hide button initially
+            button.classList.remove('show');
+            
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.classList.add('show');
+                    
+                    // Show button after last letter
+                    if (index === letters.length - 1) {
+                        setTimeout(() => {
+                            button.classList.add('show');
+                        }, 300);
+                    }
+                }, index * 400); // 400ms delay between each letter (faster)
+            });
+        }
+        
+        // Navigate to register page
+        function goToRegister() {
+            const button = document.getElementById('viewButton');
+            button.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                // For Django template
+                window.location.href = "/register/";
+            }, 200);
+        }
+        
+        // Start animation when page loads
+        window.addEventListener('load', function() {
+            setTimeout(animateLetters, 500);
+        });
+        
+        // Alternative: Start animation immediately for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show button immediately for testing
+            document.getElementById('viewButton').classList.add('show');
+            
+            // Start letter animation after short delay
+            setTimeout(animateLetters, 1000);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                goToRegister();
+            }
+        });
+        
+        // Force button to be visible (for debugging)
+        setTimeout(() => {
+            const button = document.getElementById('viewButton');
+            if (button) {
+                button.style.opacity = '1';
+                button.style.transform = 'scale(1)';
+                button.style.display = 'block';
+            }
+        }, 100);
+    </script>
+</body>
+</html>

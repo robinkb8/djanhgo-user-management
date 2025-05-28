@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .form-animation {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-focus:focus {
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .background-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, #3b82f6 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #8b5cf6 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="min-h-screen background-pattern bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center form-animation">
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                    Create Your Account
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Join us today and get started
+                </p>
+            </div>
+            
+            <!-- Registration Form -->
+            <div class="form-animation bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+                <form class="mt-8 space-y-6" action="#" method="POST">
+                    <!-- CSRF Token for Django -->
+                     {% csrf_token %}
+                    
+                    <div class="space-y-4">
+                        <!-- First Name -->
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                First Name
+                            </label>
+                            <input
+                                id="first_name"
+                                name="first_name"
+                                type="text"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Enter your first name"
+                            >
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Last Name
+                            </label>
+                            <input
+                                id="last_name"
+                                name="last_name"
+                                type="text"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Enter your last name"
+                            >
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email Address
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Enter your email address"
+                            >
+                        </div>
+                        
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+                                Phone Number
+                            </label>
+                            <input
+                                id="phone_number"
+                                name="phone_number"
+                                type="tel"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Enter your phone number"
+                            >
+                        </div>
+                        
+                        <!-- Password -->
+                        <div>
+                            <label for="password1" class="block text-sm font-medium text-gray-700 mb-2">
+                                Password
+                            </label>
+                            <input
+                                id="password1"
+                                name="password1"
+                                type="password"
+                                autocomplete="new-password"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Create a strong password"
+                            >
+                        </div>
+                        
+                        <!-- Confirm Password -->
+                        <div>
+                            <label for="password2" class="block text-sm font-medium text-gray-700 mb-2">
+                                Confirm Password
+                            </label>
+                            <input
+                                id="password2"
+                                name="password2"
+                                type="password"
+                                autocomplete="new-password"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all duration-300"
+                                placeholder="Confirm your password"
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Terms and Conditions -->
+                    <div class="flex items-center">
+                        <input
+                            id="terms"
+                            name="terms"
+                            type="checkbox"
+                            required
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        >
+                        <label for="terms" class="ml-2 block text-sm text-gray-700">
+                            I agree to the 
+                            <a href="#" class="text-blue-600 hover:text-blue-500 hover:underline">
+                                Terms and Conditions
+                            </a>
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div>
+                        <button
+                            type="submit"
+                            class="btn-hover group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                        >
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-white group-hover:text-blue-100" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Create Account
+                        </button>
+                    </div>
+                    
+                    <!-- Login Link -->
+<div class="text-center">
+    <p class="text-sm text-gray-600">
+        Already have an account?
+        <a href="{% url 'login' %}" class="font-medium text-blue-600 hover:text-blue-500 hover:underline transition-colors duration-300">
+            Sign in here
+        </a>
+    </p>
+</div>
+            <!-- Additional Info -->
+            <div class="text-center">
+                <p class="text-xs text-gray-500">
+                    By creating an account, you agree to our privacy policy and terms of service.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simple form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return false;
+            }
+            
+            if (password.length < 8) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long!');
+                return false;
+            }
+        });
+        
+        // Add smooth animations to inputs
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-105');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - User Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6366f1',
+                        'brand-pink': '#ec4899',
+                        'brand-blue': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .login-animation {
+            animation: slideInUp 0.6s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        }
+        
+        .google-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .background-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .floating-shapes::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3));
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-shapes::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+            border-radius: 30%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body class="min-h-screen background-gradient relative overflow-hidden">
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes absolute inset-0"></div>
+    
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center login-animation">
+                <h2 class="text-4xl font-bold text-white mb-2">
+                    Welcome Back
+                </h2>
+                <p class="text-lg text-white/80">
+                    Sign in to your account
+                </p>
+            </div>
+            
+            <!-- Login Form Container -->
+            <div class="login-animation glass-effect rounded-3xl shadow-2xl p-8 space-y-6" style="animation-delay: 0.2s;">
+                
+                <!-- Google Login -->
+                <!-- Google Sign-In Configuration -->
+<div id="g_id_onload"
+     data-client_id="{{ google_client_id }}"
+     data-callback="handleCredentialResponse"
+     style="display: none;">
+</div>
+
+<!-- Custom styled Google button -->
+<button
+    type="button"
+    onclick="triggerGoogleSignIn()"
+    class="google-btn w-full flex justify-center items-center py-4 px-6 border border-gray-300 rounded-xl shadow-sm bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple transition-all duration-300"
+>
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>
+    Continue with Google
+</button>
+
+<!-- Hidden Google button for triggering -->
+<div id="google-signin-button" style="display: none;">
+    <div class="g_id_signin" data-type="standard"></div>
+</div>
+                
+                <!-- Divider -->
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500 font-medium">OR</span>
+                    </div>
+                </div>
+                
+                <!-- Email/Password Form -->
+                <form class="space-y-6" action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
+                            class="input-focus appearance-none relative block w-full px-4 py-4 border-2 border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-0 focus:border-brand-purple focus:z-10 text-sm transition-all duration-300"
+                            placeholder="name@example.com"
+                        >
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="relative">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                autocomplete="current-password"
+                                required
+                                class="input-focus appearance-none relative block w-full px-4 py-4 pr-12 border-2 border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-0 focus:border-brand-purple focus:z-10 text-sm transition-all duration-300"
+                                placeholder="Enter your password"
+                            >
+                            <button
+                                type="button"
+                                class="password-toggle absolute inset-y-0 right-0 pr-4 flex items-center"
+                                onclick="togglePassword()"
+                            >
+                                <svg id="eye-icon" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input
+                                id="remember-me"
+                                name="remember-me"
+                                type="checkbox"
+                                class="h-4 w-4 text-brand-purple focus:ring-brand-purple border-gray-300 rounded"
+                            >
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                                Remember me
+                            </label>
+                        </div>
+                        
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-brand-purple hover:text-brand-pink transition-colors duration-300">
+                                Can't log in?
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div>
+                        <button
+                            type="submit"
+                            class="btn-gradient group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
+                        >
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-white/80 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Log In
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Sign Up Link -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account?
+                        <a href="{% url 'register' %}" class="font-medium text-brand-purple hover:text-brand-pink transition-colors duration-300">
+                            Sign up here
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center login-animation" style="animation-delay: 0.4s;">
+                <p class="text-xs text-white/60">
+                    By signing in, you agree to our Terms of Service and Privacy Policy.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+      // Google Sign-In Configuration and Functions
+function initializeGoogleSignIn() {
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: '{{ google_client_id }}',
+            callback: handleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true
+        });
+        console.log('Google Sign-In initialized successfully');
+    } else {
+        console.error('Google Sign-In library not loaded');
+        setTimeout(initializeGoogleSignIn, 1000); // Retry after 1 second
+    }
+}
+
+function triggerGoogleSignIn() {
+    console.log('Google Sign-In button clicked');
+    
+    if (typeof google !== 'undefined' && google.accounts) {
+        try {
+            // Trigger the Google Sign-In popup
+            google.accounts.id.prompt((notification) => {
+                console.log('Google prompt notification:', notification);
+                
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    console.log('Google prompt was not displayed or was skipped');
+                    // Fallback: show a message to the user
+                    showGoogleSignInMessage('Please enable popups and try again, or use email/password login.');
+                }
+            });
+        } catch (error) {
+            console.error('Error triggering Google Sign-In:', error);
+            showGoogleSignInMessage('Google Sign-In temporarily unavailable. Please use email/password login.');
+        }
+    } else {
+        console.error('Google Sign-In not available');
+        showGoogleSignInMessage('Google Sign-In is loading. Please try again in a moment.');
+    }
+}
+
+function handleCredentialResponse(response) {
+    console.log('Google credential response received');
+    
+    // Show loading state
+    const googleBtn = document.querySelector('.google-btn');
+    const originalText = googleBtn.innerHTML;
+    googleBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Signing you in...
+    `;
+    googleBtn.disabled = true;
+    
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                     document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    // Send credential to Django backend
+    fetch('/auth/google/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken || ''
+        },
+        body: JSON.stringify({
+            'credential': response.credential
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Server response:', data);
+        
+        if (data.success) {
+            // Success - redirect to dashboard
+            showSuccessMessage(data.message || 'Login successful!');
+            setTimeout(() => {
+                window.location.href = '/dashboard/';
+            }, 1000);
+        } else {
+            // Error from server
+            console.error('Server error:', data.error);
+            showErrorMessage(data.error || 'Login failed. Please try again.');
+            resetGoogleButton(googleBtn, originalText);
+        }
+    })
+    .catch(error => {
+        console.error('Network/Parse error:', error);
+        showErrorMessage('Connection error. Please check your internet and try again.');
+        resetGoogleButton(googleBtn, originalText);
+    });
+}
+
+function resetGoogleButton(button, originalText) {
+    button.innerHTML = originalText;
+    button.disabled = false;
+}
+
+function showSuccessMessage(message) {
+    showMessage(message, 'success');
+}
+
+function showErrorMessage(message) {
+    showMessage(message, 'error');
+}
+
+function showGoogleSignInMessage(message) {
+    showMessage(message, 'info');
+}
+
+function showMessage(message, type = 'info') {
+    // Remove existing messages
+    const existingMessage = document.getElementById('auth-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create message element
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'auth-message';
+    
+    let bgColor, textColor, borderColor;
+    switch (type) {
+        case 'success':
+            bgColor = 'bg-green-100';
+            textColor = 'text-green-700';
+            borderColor = 'border-green-400';
+            break;
+        case 'error':
+            bgColor = 'bg-red-100';
+            textColor = 'text-red-700';
+            borderColor = 'border-red-400';
+            break;
+        default:
+            bgColor = 'bg-blue-100';
+            textColor = 'text-blue-700';
+            borderColor = 'border-blue-400';
+    }
+    
+    messageDiv.className = `${bgColor} ${borderColor} ${textColor} border px-4 py-3 rounded-lg mb-4 transition-all duration-300`;
+    messageDiv.textContent = message;
+    
+    // Insert message at the top of the form
+    const formContainer = document.querySelector('.glass-effect');
+    formContainer.insertBefore(messageDiv, formContainer.firstChild);
+    
+    // Auto-hide after 5 seconds for non-error messages
+    if (type !== 'error') {
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 300);
+            }
+        }, 5000);
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing Google Sign-In');
+    
+    // Add small delay to ensure Google library is loaded
+    setTimeout(initializeGoogleSignIn, 500);
+});
+
+// Fallback initialization
+window.addEventListener('load', function() {
+    console.log('Window loaded, checking Google Sign-In');
+    
+    // Double-check initialization
+    setTimeout(() => {
+        if (typeof google === 'undefined') {
+            console.warn('Google Sign-In library failed to load');
+            showGoogleSignInMessage('Google Sign-In temporarily unavailable. Please use email/password login.');
+        }
+    }, 2000);
+});
+    </script>
+</body>
+</html>
