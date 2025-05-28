@@ -4,4 +4,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('usermanage.urls')),  # Add this line
+    path('', views.dashboard_view, name='home'),
 ]
