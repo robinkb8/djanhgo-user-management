@@ -7,4 +7,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('auth/google/', views.google_auth, name='google_auth'),
+    path('', views.dashboard_view, name='home'),
 ]
